@@ -1,3 +1,0 @@
-[submodule "DbConnector"]
-	path = blender-gen-for-docker
-	url = https://github.com/CV-Bench/blender-gen-for-docker
