@@ -1,6 +1,4 @@
-app*
+app
 calendar
-users/12345678
-users/19938882
 detectron
 detectron-deployment
