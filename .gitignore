@@ -3,3 +3,6 @@ data/*
 .vscode
 
 .env
+
+__pycache__
+users
