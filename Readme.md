@@ -9,7 +9,8 @@ An examplatory call is given by:
 docker run -it --gpus all \
 -v ${pwd}/users/19938882/blender:/data/input \
 -v ${pwd}/users/19938882/dataset:/data/output \
-blender```
+blender
+```
 
 ## How to start the Training:
 * Generate two datasets using the blender container `train` and `val` 
