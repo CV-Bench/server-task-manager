@@ -1,4 +1,6 @@
-app
+app.ipynb
 calendar
 detectron
 detectron-deployment
+__pycache__
+users
