@@ -6,10 +6,8 @@ class DataNamespace(socketio.AsyncClientNamespace):
     def on_connect(self):
         logger.info("Namespace /data connected.")
 
-        pass
-
     def on_disconnect(self):
-        pass
+        logger.warning("Namespace /data disconnected.")
 
     async def on_delete(self, data):
         pass
