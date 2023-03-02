@@ -1,7 +1,9 @@
 data/datasets/*
+!/data/datasets/.gitkeep
 data/networks/*
+!/data/networks/.gitkeep
 data/tasks/*
-!/data/.gitkeep
+!/data/tasks/.gitkeep
 .vscode
 
 .env
