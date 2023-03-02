@@ -9,7 +9,8 @@ An examplatory call is given by:
 docker run -it --gpus all \
 -v ${pwd}/users/19938882/blender:/data/input \
 -v ${pwd}/users/19938882/dataset:/data/output \
-blender`
+blender
+```
 
 ## How to start the Training:
 * Generate two datasets using the blender container `train` and `val` 
@@ -30,3 +31,4 @@ There are different configs that are currently supported
 |---------------------------------|-------------|
 | configs/\_user\_/retinanet.py   | RetinaNet is a state-of-the-art single-stage object detection model that uses a feature pyramid network and a focal loss function to address the issue of class imbalance in object detection. It achieves high accuracy and efficiency in detecting objects at various scales and aspect ratios.|
 | configs/\_user\_/faster-rcnn.py | Faster-RCNN is a widely used two-stage object detection model that introduces a region proposal network (RPN) to generate object proposals and a Fast R-CNN network to classify and refine these proposals. It achieves high accuracy in detecting objects while also being computationally efficient.|
+
