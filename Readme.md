@@ -26,7 +26,7 @@ mmdetection configs/_user_/retinanet.py
 ```
 
 There are different configs that are currently supported
-| Object Detection              |
-|-------------------------------|
-| configs/\_user\_/retinanet.py   |
-| configs/\_user\_/faster-rcnn.py |
+| Object Detection                | Description |
+|---------------------------------|-------------|
+| configs/\_user\_/retinanet.py   | RetinaNet is a state-of-the-art single-stage object detection model that uses a feature pyramid network and a focal loss function to address the issue of class imbalance in object detection. It achieves high accuracy and efficiency in detecting objects at various scales and aspect ratios.|
+| configs/\_user\_/faster-rcnn.py | Faster-RCNN is a widely used two-stage object detection model that introduces a region proposal network (RPN) to generate object proposals and a Fast R-CNN network to classify and refine these proposals. It achieves high accuracy in detecting objects while also being computationally efficient.|
