@@ -58,4 +58,6 @@ def start_task(task_id, task_type, task_data):
 
 def stop_task(task_id):
     # TODO Stop task here, return false when stop failed, else return true
+
+    # Delete all Data except the output log belonging to the task. So all backgrounds, models, ... in /task/[id]
     pass
