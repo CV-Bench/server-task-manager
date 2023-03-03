@@ -4,6 +4,10 @@ data/networks/*
 !/data/networks/.gitkeep
 data/tasks/*
 !/data/tasks/.gitkeep
+data/backgrounds/*
+!/data/backgrounds/.gitkeep
+data/models/*
+!/data/models/.gitkeep
 .vscode
 
 .env

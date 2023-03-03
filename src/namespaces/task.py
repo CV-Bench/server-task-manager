@@ -1,22 +1,25 @@
-from database import Database
+from src.database import Database
 import socketio
+import asyncio
+import traceback
 
 from src.logger import logger
 from src.config import config
-from src.task import start_task
+from src.task import start_task, stop_task, cleanup_task
 
 class TaskNamespace(socketio.AsyncClientNamespace):
+    background_tasks = set()
+
     def on_connect(self):
         logger.info("Namespace /task connected.")
-        pass
 
     def on_disconnect(self):
         logger.warning("Namespace /task disconnected.")
 
-        pass
-
     async def handle_on_start(self, data):
         task_id = data["taskId"]
+
+        logger.info(f"Start task {task_id}")
 
         task = Database.get_task(data["taskId"])
 
@@ -24,9 +27,7 @@ class TaskNamespace(socketio.AsyncClientNamespace):
 
         task_data = task["info"]
 
-        is_success = await start_task(task_id, task_type, task_data)
-
-        ## TODO if success set task to running
+        is_success = start_task(task_id, task_type, task_data)
 
         await self.emit(
             "task_started" if is_success else "start_failed", 
@@ -35,10 +36,51 @@ class TaskNamespace(socketio.AsyncClientNamespace):
             }
         )
 
+    async def handle_on_stop(self, data):
+        task_id = data["taskId"] 
+
+        logger.info(f"Stop task {task_id}")
+
+        is_success =  stop_task(task_id)
+
+        await self.emit(
+            "task_stopped" if is_success else "stop_failed",
+            {
+                **data, "socketId": config["SERVER_ID"],
+            }
+        )
+
+    async def handle_on_cleanup(self, data):
+        task_id = data["taskId"] 
+
+        logger.info(f"Cleanup task {task_id}")
+
+        is_success = False
+
+        try:
+            is_success = cleanup_task(task_id)
+        except:
+            traceback.print_exc()
+
+        await self.emit(
+            "task_stopped" if is_success else "stop_failed",
+            {
+                **data, "socketId": config["SERVER_ID"],
+            }
+        )
+
+    async def add_task(self, handler):
+        task = asyncio.create_task(handler())
+
+        self.background_tasks.add(task)
+
+        task.add_done_callback(self.background_tasks.discard)
+
     async def on_start(self, data):
-        self.handle_on_start(data)
+        await self.add_task(lambda: self.handle_on_start(data))
 
     async def on_stop(self, data):
-        print("ON STOP", data)
+        await self.add_task(lambda: self.handle_on_stop(data))
 
-        pass
+    async def on_cleanup(self, data):
+        await self.add_task(lambda: self.handle_on_cleanup(data))

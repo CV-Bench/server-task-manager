@@ -4,6 +4,12 @@ import os
 from src.config import config
 from src.constants import Buckets
 
+import logging
+
+logging.getLogger('boto3').setLevel(logging.CRITICAL)
+logging.getLogger('botocore').setLevel(logging.CRITICAL)
+logging.getLogger('s3transfer').setLevel(logging.CRITICAL)
+logging.getLogger('urllib3').setLevel(logging.CRITICAL)
 
 class S3:
     def create_s3_client():
@@ -17,7 +23,6 @@ class S3:
             aws_secret_access_key=config["AWS_SECRET_ACCESS_KEY"]
         )
 
-
     # def upload_data(task_id, data, key):
     #     client = S3.create_s3_client()
         
@@ -28,22 +33,6 @@ class S3:
     #         ACL='private',
     #     )
 
-
-    # def delete_many(objects):
-    #     client = S3.create_s3_client()
-
-    #     client.delete_objects(
-    #         Bucket=config["BUCKET_NAME"],
-    #         Delete={
-    #             "Objects": [
-    #                 {
-    #                     'Key': object
-    #                 } for object in objects
-    #             ]
-    #         },
-    #         RequestPayer='requester'
-    #     )
-
     def get_object(key):
         client = S3.create_s3_client()
 
@@ -52,6 +41,13 @@ class S3:
             Key=key
         ).get("Body")
 
+    def list_objects(prefix):
+        client = S3.create_s3_client()
+
+        return client.list_objects(
+            Bucket=config["BUCKET_NAME"],
+            Prefix=prefix
+        )
 
     class Model:
         def get(id):
@@ -59,8 +55,18 @@ class S3:
                 os.path.join(Buckets.MODELS, id)
             )
         
+        def list(prefix):
+            return S3.list_objects(
+                os.path.join(Buckets.MODELS, prefix)
+            )
+        
     class Background:
         def get(id):
             return S3.get_object(
                 os.path.join(Buckets.BACKGROUNDS, id)
+            )
+        
+        def list(prefix):
+            return S3.list_objects(
+                os.path.join(Buckets.BACKGROUNDS, prefix)
             )

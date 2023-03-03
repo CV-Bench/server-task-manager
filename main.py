@@ -26,3 +26,7 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+    # task = TaskNamespace("/task")
+
+    # asyncio.run(task.on_cleanup({"taskId": "64025831583315cbfb1537c3"}))

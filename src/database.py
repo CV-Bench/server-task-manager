@@ -15,14 +15,14 @@ class Database:
     ## NETWORK ARCHITECTURE
 
     def get_network_architecture(networkArchitectureId):
-        db.networkArchitectures.find_one({
+        return db.networkArchitectures.find_one({
             "_id": ObjectId(networkArchitectureId)
         })
 
     ## DATASET CONFIGURATION
 
     def get_dataset_configuration(datasetConfigId):
-        db.datasetConfigurations.find_one({
+        return db.datasetConfigurations.find_one({
             "_id": ObjectId(datasetConfigId)
         })
     
