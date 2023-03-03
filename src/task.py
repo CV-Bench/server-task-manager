@@ -81,6 +81,7 @@ def start_dataset_creation(id, task_data):
         f"docker run -d --memory 16g "
         f"-v {pwd}/data/tasks/{id}:/data/input "
         f"-v {pwd}/data/datasets/{id}:/data/output "
+        f"-v {pwd}/data/tasks/{id}/config.json:/data/config/config.json "
         f"--name {id} blender-gen --taskID {id}"
     )
 
