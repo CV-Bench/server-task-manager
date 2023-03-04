@@ -37,7 +37,7 @@ datatype_bucket_map = lambda e: {
 
 class Socket:
     DATA_UPLOADED = "data_uploaded"
-    UPLOAD_FAILED = 
+    UPLOAD_FAILED = "upload_failed"
     DATA_DELETED = "data_deleted"
 
     TASK_STOPPED = "task_stopped"
