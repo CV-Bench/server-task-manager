@@ -6,6 +6,7 @@ import traceback
 from src.logger import logger
 from src.config import config
 from src.task import start_task, stop_task, cleanup_task
+from src.constants import Socket
 
 class TaskNamespace(socketio.AsyncClientNamespace):
     background_tasks = set()
@@ -30,9 +31,9 @@ class TaskNamespace(socketio.AsyncClientNamespace):
         is_success = start_task(task_id, task_type, task_data)
 
         await self.emit(
-            "task_started" if is_success else "start_failed", 
+            Socket.TASK_STARTED if is_success else Socket.START_FAILED, 
             {
-                **data, "socketId": config["SERVER_ID"],
+                **data, "serverId": config["SERVER_ID"],
             }
         )
 
@@ -44,9 +45,9 @@ class TaskNamespace(socketio.AsyncClientNamespace):
         is_success =  stop_task(task_id)
 
         await self.emit(
-            "task_stopped" if is_success else "stop_failed",
+            Socket.TASK_STOPPED if is_success else Socket.STOP_FAILED,
             {
-                **data, "socketId": config["SERVER_ID"],
+                **data, "serverId": config["SERVER_ID"],
             }
         )
 
@@ -63,9 +64,9 @@ class TaskNamespace(socketio.AsyncClientNamespace):
             traceback.print_exc()
 
         await self.emit(
-            "task_stopped" if is_success else "stop_failed",
+            Socket.TASK_CLEANED if is_success else Socket.CLEANUP_FAILED,
             {
-                **data, "socketId": config["SERVER_ID"],
+                **data, "serverId": config["SERVER_ID"],
             }
         )
 

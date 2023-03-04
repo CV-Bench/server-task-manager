@@ -25,8 +25,8 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    # asyncio.run(main())
 
-    # task = TaskNamespace("/task")
+    task = DataNamespace("/task")
 
-    # asyncio.run(task.on_cleanup({"taskId": "64025831583315cbfb1537c3"}))
+    asyncio.run(task.on_upload({"dataId": "6402459c9e9a2fdf4d86c0ef", "dataType": "DATASET"}))

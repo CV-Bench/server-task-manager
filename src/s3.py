@@ -2,7 +2,7 @@ import boto3
 import os
 
 from src.config import config
-from src.constants import Buckets
+from src.constants import Buckets, datatype_bucket_map
 
 import logging
 
@@ -23,15 +23,14 @@ class S3:
             aws_secret_access_key=config["AWS_SECRET_ACCESS_KEY"]
         )
 
-    # def upload_data(task_id, data, key):
-    #     client = S3.create_s3_client()
+    def upload_data(data, key):
+        client = S3.create_s3_client()
         
-    #     client.put_object(
-    #         Bucket=config["BUCKET_NAME"],
-    #         Key=task_id + "_" + key,
-    #         Body=data,
-    #         ACL='private',
-    #     )
+        client.put_object(
+            Bucket=config["BUCKET_NAME"],
+            Key=key,
+            Body=data
+        )
 
     def get_object(key):
         client = S3.create_s3_client()
@@ -70,3 +69,8 @@ class S3:
             return S3.list_objects(
                 os.path.join(Buckets.BACKGROUNDS, prefix)
             )
+        
+    def build_key(data_type, id, extension):
+        bucket = datatype_bucket_map(data_type)
+
+        return os.path.join(bucket, id + "." + extension)

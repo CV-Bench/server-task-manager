@@ -126,9 +126,6 @@ def cleanup_task(task_id):
 
         path = os.path.join(base_path, path)
 
-        try:
-            shutil.rmtree(path)
-        except:
-            os.remove(path)
+        Utils.rm_path(path)
 
     return True

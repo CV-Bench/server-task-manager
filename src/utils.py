@@ -5,6 +5,9 @@ import glob
 from pathlib import Path
 import subprocess
 import traceback
+from io import BytesIO
+import zipfile
+
 
 from src.database import Database
 from src.s3 import S3
@@ -23,6 +26,12 @@ class Utils:
         shutil.rmtree(dest)
         
         shutil.copytree(src, dest)
+
+    def rm_path(path):
+        try:
+            shutil.rmtree(path)
+        except:
+            os.remove(path)
 
     class Dataset:
 
@@ -130,3 +139,23 @@ class Utils:
 
         def start(startup_command):
             subprocess.Popen([startup_command], shell=True)
+
+    class Upload:
+        def get_dir_as_zip(dir_path):
+            memory_file = BytesIO()
+
+            with zipfile.ZipFile(memory_file, 'w', zipfile.ZIP_DEFLATED) as zf:
+                Utils.Upload.zipdir(dir_path, zf)
+
+            memory_file.seek(0)
+
+            return memory_file
+
+        def zipdir(path, ziph):
+            # ziph is zipfile handle
+            for root, dirs, files in os.walk(path):
+                for file in files:
+                    ziph.write(os.path.join(root, file), 
+                            os.path.relpath(os.path.join(root, file), 
+                                            os.path.join(path, '..')))
+
