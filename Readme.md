@@ -16,15 +16,27 @@ blender
 * Generate two datasets using the blender container `train` and `val` 
 * Fix the image paths from the blender container
 
-Build container: `docker build -t mmdetection openmmm`
+Build container: `docker build -t mmdetection openmm`
 
 To train a network using this container run 
 ```
 docker run -it --gpus all --memory 16g --name {uid}-training \
 -v {pwd}/users/{uid}/dataset/:/data/input \
 -v {pwd}/users/{uid}/training/:/data/output \
+-e UID={uid}
+-e ENDPOINT={endpoint}
 mmdetection configs/_user_/retinanet.py
 ```
+
+The following post messages are posted:
+
+| Url | Call | Event |
+|-----|------|-------|
+|{ENPOINT}/training_finished | {'uid': uid} | on training finished | 
+|{ENPOINT}/training_failed | {'uid': uid} | on exception in training script | 
+
+
+## Model Zoo
 
 There are different configs that are currently supported
 |Model      | Task  |Model Config                    | Description | Dataset      |

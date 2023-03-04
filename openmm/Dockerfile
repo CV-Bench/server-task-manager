@@ -62,7 +62,7 @@ RUN pip install --no-cache-dir mmcv-full==1.3.17 -f https://download.openmmlab.c
 ############# Install MMDetection
 RUN conda clean --all
 
-RUN echo 1
+RUN echo 3
 
 RUN git clone https://github.com/CV-Bench/mmdetection.git /mmdetection
 WORKDIR /mmdetection
@@ -73,5 +73,5 @@ RUN pip install --no-cache-dir -e .
 
 # COPY ./configs configs/_user_
 
-ENTRYPOINT ["python", "tools/train.py"]
-CMD ["configs/_user_/faster-rccn.py"]
+#ENTRYPOINT ["python", "tools/train.py"]
+#CMD ["configs/_user_/faster-rccn.py"]
