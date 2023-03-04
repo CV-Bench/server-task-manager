@@ -14,15 +14,16 @@ from src.config import config
 
 
 def start_training(id, task_data):
-    # task_data = { datasetId, netowrkArchitectureId } 
+    # task_data = { datasetId, netowrkArchitectureId } ✔️
 
-    ## Get the identifier of the network architecture (Use Database.get_network_architecture for this)
+    ## Get the identifier of the network architecture (Use Database.get_network_architecture for this) ?
     
-    ## Make sure the dataset is in the local file storage in /data/dataset/[datasetid]
+    ## Make sure the dataset is in the local file storage in /data/dataset/[datasetid] ✔️
 
-    ## Start docker with key from network architecture object and dataset
+    ## Start docker with key from network architecture object and dataset ✔️
 
-    # Return true when everything worked, else return false
+    # Return true when everything worked, else return false ?
+    
     
     
     config_lookup = {
@@ -48,8 +49,9 @@ def start_training(id, task_data):
     docker_command = 'docker run -it --gpus all --memory 16g'
 
     # Mount input and output folders
-    input_mount = f'-v /data/dataset/{datasetid}:/data/input'
-    output_mount = f'-v /data/network/{id}:/data/output'
+    pwd = os.getcwd()
+    input_mount = f'-v {pwd}/data/dataset/{datasetid}:/data/input'
+    output_mount = f'-v {pwd}/data/network/{id}:/data/output'
 
     # Set environment variables
     endpoint_env = f'-e ENDPOINT={config["HOST_DOMAIN"]}/task/'
@@ -64,7 +66,6 @@ def start_training(id, task_data):
 
     # Build Docker run command
     call = f"{docker_command} {input_mount} {output_mount} {endpoint_env} {id_env} {run_name} {image} {nn_config}"
-
 
     Utils.Docker.stop_and_remove(id)
     Utils.Docker.start(call)
