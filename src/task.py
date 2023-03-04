@@ -23,8 +23,53 @@ def start_training(id, task_data):
     ## Start docker with key from network architecture object and dataset
 
     # Return true when everything worked, else return false
+    
+    
+    config_lookup = {
+        'retinanet_r50_fpn': 'configs/_user_/retinanet_r50_fpn.py',
+        'faster_rcnn_r50_fpn': 'configs/_user_/faster_rcnn_r50_fpn.py',
+    }
+    
+    # retrieve network architecture and dataset id
+    network_architecture = task_data.get('networkArchitectureId') 
+    dataset_id = task_data.get('datasetId')
+    
+    # check if both are specified
+    if network_architecture is None:
+        raise KeyError()(f'Task {id}: No network architecture specified in ')
+    if dataset_id is None:
+        raise KeyError()(f'Task {id}: No dataset id specified')
+    
+    # check if network architecture is supported
+    if network_architecture not in config_lookup.keys():
+        raise ValueError()(f'Task {id}: Network architecture {network_architecture} not supported')
+    
+    # Set Docker run command
+    docker_command = 'docker run -it --gpus all --memory 16g'
 
-    pass
+    # Mount input and output folders
+    input_mount = f'-v /data/dataset/{datasetid}:/data/input'
+    output_mount = f'-v /data/network/{id}:/data/output'
+
+    # Set environment variables
+    endpoint_env = f'-e ENDPOINT={config["HOST_DOMAIN"]}/task/'
+    id_env = f'-e ID={id}'
+
+    # Set Docker run name and image
+    run_name = f'--name {id}'
+    image = 'mmdetection'
+
+    # Get neural network configuration from lookup table
+    nn_config = config_lookup[network_architecture]
+
+    # Build Docker run command
+    call = f"{docker_command} {input_mount} {output_mount} {endpoint_env} {id_env} {run_name} {image} {nn_config}"
+
+
+    Utils.Docker.stop_and_remove(id)
+    Utils.Docker.start(call)
+    
+    return True ### THIS IS JUST A PLACEHOLDER, CHANGE THIS TO THE CORRECT RETURN VALUE WITH DOCKER API
 
 
 def start_dataset_creation(id, task_data):
