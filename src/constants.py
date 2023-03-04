@@ -46,3 +46,9 @@ class Socket:
     CLEANUP_FAILED = "cleanup_failed"
     TASK_STARTED = "task_started"
     START_FAILED = "start_failed"
+
+
+allowed_training_architecture_keys = [
+    "retinanet_r50_fpn",
+    "faster_rcnn_r50_fpn"
+]

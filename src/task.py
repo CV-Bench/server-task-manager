@@ -8,69 +8,48 @@ from src.utils import Utils
 from src.database import Database
 from src.logger import logger
 from src.config import config
+from src.constants import allowed_training_architecture_keys
 
 
 ## Format of all Database objects can be found in frontend repo in packages/shared-types
 
 
 def start_training(id, task_data):
-    # task_data = { datasetId, netowrkArchitectureId } ✔️
+    network_architecture_id = task_data['networkArchitectureId'] 
+    dataset_id = task_data['datasetId']
 
-    ## Get the identifier of the network architecture (Use Database.get_network_architecture for this) ?
-    
-    ## Make sure the dataset is in the local file storage in /data/dataset/[datasetid] ✔️
+    network_architecture = Database.get_network_architecture(network_architecture_id)
 
-    ## Start docker with key from network architecture object and dataset ✔️
+    nn_identifier = network_architecture["identifier"]
 
-    # Return true when everything worked, else return false ?
-    
-    
-    
-    config_lookup = {
-        'retinanet_r50_fpn': 'configs/_user_/retinanet_r50_fpn.py',
-        'faster_rcnn_r50_fpn': 'configs/_user_/faster_rcnn_r50_fpn.py',
-    }
-    
-    # retrieve network architecture and dataset id
-    network_architecture = task_data.get('networkArchitectureId') 
-    dataset_id = task_data.get('datasetId')
-    
-    # check if both are specified
-    if network_architecture is None:
-        raise KeyError()(f'Task {id}: No network architecture specified in ')
-    if dataset_id is None:
-        raise KeyError()(f'Task {id}: No dataset id specified')
-    
-    # check if network architecture is supported
-    if network_architecture not in config_lookup.keys():
-        raise ValueError()(f'Task {id}: Network architecture {network_architecture} not supported')
-    
-    # Set Docker run command
-    docker_command = 'docker run -it --gpus all --memory 16g'
+    if not nn_identifier in allowed_training_architecture_keys:
+        logger.error(f"[START TRAINING] Key {nn_identifier} not allowed.")
 
-    # Mount input and output folders
+        return False
+    
     pwd = os.getcwd()
-    input_mount = f'-v {pwd}/data/dataset/{datasetid}:/data/input'
-    output_mount = f'-v {pwd}/data/network/{id}:/data/output'
+    dataset_path = os.path.join(pwd, "data", "dataset", dataset_id)
 
-    # Set environment variables
-    endpoint_env = f'-e ENDPOINT={config["HOST_DOMAIN"]}/task/'
-    id_env = f'-e ID={id}'
+    if not os.path.exists(dataset_path):
+        logger.error(f"[START TASK] Dataset with ID {dataset_id} doesn't exist.")
 
-    # Set Docker run name and image
-    run_name = f'--name {id}'
-    image = 'mmdetection'
+        return False
 
-    # Get neural network configuration from lookup table
-    nn_config = config_lookup[network_architecture]
-
-    # Build Docker run command
-    call = f"{docker_command} {input_mount} {output_mount} {endpoint_env} {id_env} {run_name} {image} {nn_config}"
+    startup_command = (
+        f"docker run -it --gpus all --memory 16g "
+        # Volumes
+        f"-v {pwd}/data/dataset/{dataset_id}:/data/input "
+        f"-v {pwd}/data/network/{id}:/data/output "
+        # Env variables
+        f"-e ENDPOINT={config['HOST_DOMAIN']}/task/ "
+        f"-e ID={id} "
+        f"--name {id} mmdetection configs/_user_/{nn_identifier}.py"
+    )
 
     Utils.Docker.stop_and_remove(id)
-    Utils.Docker.start(call)
+    Utils.Docker.start(startup_command)
     
-    return True ### THIS IS JUST A PLACEHOLDER, CHANGE THIS TO THE CORRECT RETURN VALUE WITH DOCKER API
+    return True
 
 
 def start_dataset_creation(id, task_data):
