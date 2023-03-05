@@ -8,7 +8,7 @@ from src.utils import Utils
 from src.database import Database
 from src.logger import logger
 from src.config import config
-from src.constants import allowed_training_architecture_keys
+from src.constants import allowed_training_architecture_keys, Docker
 
 
 ## Format of all Database objects can be found in frontend repo in packages/shared-types
@@ -43,7 +43,8 @@ def start_training(id, task_data):
         # Env variables
         f"-e ENDPOINT={config['HOST_DOMAIN']}/task/ "
         f"-e ID={id} "
-        f"--name {id} mmdetection configs/_user_/{nn_identifier}.py"
+        # Name
+        f"--name {id} {Docker.OPENMM} configs/_user_/{nn_identifier}.py"
     )
 
     Utils.Docker.stop_and_remove(id)
@@ -57,11 +58,6 @@ def start_dataset_creation(id, task_data):
 
     base_path = os.path.join(pwd, "data")
 
-    Utils.Dataset.get_and_save_dataset_configuration(
-        os.path.join(base_path, "tasks", str(id)), 
-        task_data["datasetConfigurationId"]
-    )
-
     # Download and save models and backgrounds
 
     model_paths = Utils.Dataset.get_and_save_models(
@@ -71,12 +67,12 @@ def start_dataset_creation(id, task_data):
     
     background_paths = Utils.Dataset.get_and_save_backgrounds(
         os.path.join(base_path, "backgrounds"),
-        task_data["backgrounds"]
+        task_data["backgroundIds"]
     )
 
     # Copy all Backgrounds
 
-    backgrounds_base_path = os.path.join(base_path, "tasks", id, "backgrounds")
+    backgrounds_base_path = os.path.join(base_path, "tasks", id, "backgrounds", "static")
 
     Utils.make_dir(backgrounds_base_path)
 
@@ -98,16 +94,28 @@ def start_dataset_creation(id, task_data):
 
         Utils.copy_dir(path, model_path)
 
+    # Create config object
+
+    Utils.Dataset.get_and_save_dataset_configuration(
+        os.path.join(base_path, "tasks", str(id)), 
+        task_data["configurationId"],
+        task_data["modelIds"]
+    )
+
     # Start the Task
 
     Utils.Docker.stop_and_remove(id)
 
     startup_command = (
         f"docker run -d --memory 16g "
+        # Volumes
         f"-v {pwd}/data/tasks/{id}:/data/input "
         f"-v {pwd}/data/datasets/{id}:/data/output "
-        f"-v {pwd}/data/tasks/{id}/config.json:/data/config/config.json "
-        f"--name {id} blender-gen --taskID {id}"
+        f"-v {pwd}/data/tasks/{id}/config.json:/data/input/config/config.json "
+        # Name
+        f"--name {id} {Docker.BLENDER_GEN} "
+        # Arguments
+        f"--taskID {id} --endpoint {config['HOST_DOMAIN']}"
     )
 
     Utils.Docker.start(startup_command)

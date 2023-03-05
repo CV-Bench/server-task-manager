@@ -35,13 +35,53 @@ class Utils:
 
     class Dataset:
 
-        def get_and_save_dataset_configuration(base_path, id):
+        def get_and_save_dataset_configuration(base_path, id, model_ids):
             Utils.make_dir(base_path)
 
             config = Database.get_dataset_configuration(id)
 
+            new_config = Utils.Dataset.build_config(config["configuration"], model_ids)
+
             with open(os.path.join(base_path, "config.json"), "w") as f:
-                json.dump(config["configuration"], f)
+                json.dump(new_config, f)
+
+        def build_config(config, model_ids):
+            new_config = {
+                **config
+            }
+
+            min_max_keys = ["azi", "metallic", "roughness", "inc", "x_pos", "y_pos", "z_pos"]
+
+            new_random = {}
+
+            for key in min_max_keys:
+                min_key = f"min_{key}"
+                max_key = f"max_{key}"
+
+                new_random[key] = [config["random"].get(min_key), config["random"].get(max_key)]
+
+            new_config["random"] = {
+                **new_random,
+                "distractors": [0, 0]
+            }
+
+            objects = []
+
+            models = Database.get_model_list(model_ids)
+
+            for model in models:
+                objects.append({
+                    "label": model["name"],
+                    "model": str(model["_id"])
+                })
+
+            new_config["input"] = {
+                "object": objects,
+                "environment": [],
+                "distractor": []
+            }
+
+            return new_config
 
         def get_and_save_models(base_path, models):
             """

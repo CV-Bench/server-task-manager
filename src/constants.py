@@ -52,3 +52,8 @@ allowed_training_architecture_keys = [
     "retinanet_r50_fpn",
     "faster_rcnn_r50_fpn"
 ]
+
+
+class Docker:
+    OPENMM = "openmm"
+    BLENDER_GEN = "blender-gen"

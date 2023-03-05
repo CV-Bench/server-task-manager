@@ -2,6 +2,7 @@ from src.database import Database
 import socketio
 import asyncio
 import traceback
+import json
 
 from src.logger import logger
 from src.config import config
@@ -84,4 +85,5 @@ class TaskNamespace(socketio.AsyncClientNamespace):
         await self.add_task(lambda: self.handle_on_stop(data))
 
     async def on_cleanup(self, data):
+
         await self.add_task(lambda: self.handle_on_cleanup(data))

@@ -26,6 +26,15 @@ class Database:
             "_id": ObjectId(datasetConfigId)
         })
     
+    ## MODELS
+
+    def get_model_list(modelIds):
+        return db.models.find({
+            "_id": {
+                "$in": [ObjectId(i) for i in modelIds]
+            }
+        })
+    
     ## TASK
 
     def update_task(task_id, update):
