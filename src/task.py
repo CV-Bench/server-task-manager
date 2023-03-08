@@ -36,12 +36,12 @@ def start_training(id, task_data):
         return False
 
     startup_command = (
-        f"docker run -it --gpus all --memory 16g "
+        f"docker run -it --gpus all --memory 16g --network=host "
         # Volumes
         f"-v {pwd}/data/dataset/{dataset_id}:/data/input "
         f"-v {pwd}/data/network/{id}:/data/output "
         # Env variables
-        f"-e ENDPOINT={config['HOST_DOMAIN']}/task/ "
+        f"-e ENDPOINT={config['HOST_DOMAIN']} "
         f"-e ID={id} "
         # Name
         f"--name {id} {Docker.OPENMM} configs/_user_/{nn_identifier}.py"
@@ -107,7 +107,7 @@ def start_dataset_creation(id, task_data):
     Utils.Docker.stop_and_remove(id)
 
     startup_command = (
-        f"docker run -d --memory 16g "
+        f"docker run -d --memory 16g --network=host "
         # Volumes
         f"-v {pwd}/data/tasks/{id}:/data/input "
         f"-v {pwd}/data/datasets/{id}:/data/output "
@@ -126,9 +126,6 @@ def start_dataset_creation(id, task_data):
 
 
 def start_task(task_id, task_type, task_data):
-    # TODO Check how many containers are currently running and
-    # return false when max is reached 
-
     PROCESS_TASK = {
         TaskType.CREATE_DATASET: start_dataset_creation,
         TaskType.CREATE_NETWORK: start_training
