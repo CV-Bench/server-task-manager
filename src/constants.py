@@ -59,3 +59,7 @@ allowed_training_architecture_keys = [
 class Docker:
     OPENMM = "openmm"
     BLENDER_GEN = "blender-gen"
+
+
+class Logs:
+    DATASET_MAX_LINES = 100

@@ -17,6 +17,12 @@ from src.logs import task_log_watcher, get_watcher_path
 class TaskNamespace(socketio.AsyncClientNamespace):
     background_tasks = set()
     observers = {}
+    task_queue = asyncio.Queue()
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.add_task(self.handle_send_log_update)
 
     def on_connect(self):
         logger.info("Namespace /task connected.")
@@ -79,7 +85,17 @@ class TaskNamespace(socketio.AsyncClientNamespace):
             }
         )
 
-    async def add_task(self, handler):
+    async def handle_send_log_update(self):
+        while True:
+            if not self.task_queue.empty():
+                data = self.task_queue.get_nowait()
+
+                if data:
+                    await self.emit(Socket.LOG_UPDATE, data)
+
+            await asyncio.sleep(5)
+
+    def add_task(self, handler):
         task = asyncio.create_task(handler())
 
         self.background_tasks.add(task)
@@ -99,9 +115,10 @@ class TaskNamespace(socketio.AsyncClientNamespace):
         task_id = data["taskId"]
         task_type = data["taskType"]
 
-        handler = task_log_watcher[task_type]
+        if self.observers.get(task_id):
+            return
 
-        print("SUBSCRIBE TO TASK LOG", data, handler)
+        handler = task_log_watcher[task_type]
 
         if not handler:
             return
@@ -111,7 +128,7 @@ class TaskNamespace(socketio.AsyncClientNamespace):
         Utils.make_dir(watch_path)
 
         new_observer = Observer()
-        new_observer.schedule(handler(self), path=watch_path)
+        new_observer.schedule(handler(self, task_id, self.task_queue, watch_path=watch_path), path=watch_path)
         new_observer.start()
 
         self.observers[task_id] = new_observer
