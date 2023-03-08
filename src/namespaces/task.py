@@ -3,11 +3,23 @@ import socketio
 import asyncio
 import traceback
 import json
+import time
 
 from src.logger import logger
 from src.config import config
 from src.task import start_task, stop_task, cleanup_task
 from src.constants import Socket
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
+
+class TaskLogUpdateHandler(FileSystemEventHandler):
+    def  on_modified(self,  event):
+         print(f'event type: {event.event_type} path : {event.src_path}')
+    def  on_created(self,  event):
+         print(f'event type: {event.event_type} path : {event.src_path}')
+    def  on_deleted(self,  event):
+         print(f'event type: {event.event_type} path : {event.src_path}')
+
 
 class TaskNamespace(socketio.AsyncClientNamespace):
     background_tasks = set()
@@ -17,6 +29,10 @@ class TaskNamespace(socketio.AsyncClientNamespace):
 
     def on_disconnect(self):
         logger.warning("Namespace /task disconnected.")
+
+    observer = Observer()
+    observer.schedule(TaskLogUpdateHandler(), path="C:/Users/thebr/Documents/TUBerlin/FS1/server-task-manager")
+    observer.start()
 
     async def handle_on_start(self, data):
         task_id = data["taskId"]
