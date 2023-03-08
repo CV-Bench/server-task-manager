@@ -15,7 +15,7 @@ def get_stats(path->str)->tuple:
     # last line is empty
     lines = open(path, 'r').read().split('\n')[1:-1]
     logs = [json.loads(line) for line in lines]
-    val_metric_object = [log['bbox_mAP'] for log in logs if log['mode'] == 'val']
+    val_metric_object = [log for log in logs if log['mode'] == 'val']
     
 
     if len(val_metric_object) == 0:
