@@ -47,6 +47,8 @@ class Socket:
     TASK_STARTED = "task_started"
     START_FAILED = "start_failed"
 
+    LOG_UPDATE = "log_update"
+
 
 allowed_training_architecture_keys = [
     "retinanet_r50_fpn",
