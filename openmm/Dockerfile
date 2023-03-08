@@ -37,7 +37,7 @@ RUN wget -O /checkpoints/detr_r50.pth https://download.openmmlab.com/mmdetection
 
 RUN apt update && apt install -y nano
 
-RUN echo 13
+RUN echo 17
 
 RUN git clone https://github.com/CV-Bench/mmdetection.git /mmdetection
 WORKDIR /mmdetection
