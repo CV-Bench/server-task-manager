@@ -24,7 +24,20 @@ RUN pip install --no-cache-dir mmcv-full==1.3.17 -f https://download.openmmlab.c
 ############# Install MMDetection
 RUN conda clean --all
 
-RUN echo 3
+RUN mkdir /checkpoints
+RUN apt update && apt install -y wget
+
+RUN wget -O /checkpoints/faster_rcnn_r50_fpn.pth https://download.openmmlab.com/mmdetection/v2.0/faster_rcnn/faster_rcnn_r50_fpn_mstrain_3x_coco/faster_rcnn_r50_fpn_mstrain_3x_coco_20210524_110822-e10bd31c.pth
+RUN wget -O /checkpoints/retinanet_r50_fpn.pth https://download.openmmlab.com/mmdetection/v2.0/retinanet/retinanet_r50_fpn_2x_coco/retinanet_r50_fpn_2x_coco_20200131-fdb43119.pth
+RUN wget -O /checkpoints/yolo_v3.pth https://download.openmmlab.com/mmdetection/v2.0/yolo/yolov3_d53_mstrain-608_273e_coco/yolov3_d53_mstrain-608_273e_coco_20210518_115020-a2c3acb8.pth
+RUN wget -O /checkpoints/yolo_x.pth https://download.openmmlab.com/mmdetection/v2.0/yolox/yolox_s_8x8_300e_coco/yolox_s_8x8_300e_coco_20211121_095711-4592a793.pth
+RUN wget -O /checkpoints/yolo_x.pth https://download.openmmlab.com/mmdetection/v2.0/yolox/yolox_s_8x8_300e_coco/yolox_s_8x8_300e_coco_20211121_095711-4592a793.pth
+RUN wget -O /checkpoints/tood_r50_fpn.pth https://download.openmmlab.com/mmdetection/v2.0/tood/tood_r50_fpn_mstrain_2x_coco/tood_r50_fpn_mstrain_2x_coco_20211210_144231-3b23174c.pth
+RUN wget -O /checkpoints/detr_r50.pth https://download.openmmlab.com/mmdetection/v2.0/detr/detr_r50_8x2_150e_coco/detr_r50_8x2_150e_coco_20201130_194835-2c4b8974.pth
+
+RUN apt update && apt install -y nano
+
+RUN echo 13
 
 RUN git clone https://github.com/CV-Bench/mmdetection.git /mmdetection
 WORKDIR /mmdetection
@@ -35,5 +48,5 @@ RUN pip install --no-cache-dir -e .
 
 # COPY ./configs configs/_user_
 
-ENTRYPOINT ["python", "tools/train.py"]
-CMD ["configs/_user_/faster-rccn.py"]
+#ENTRYPOINT ["python", "tools/train.py"]
+#CMD ["configs/_user_/faster-rccn.py"]

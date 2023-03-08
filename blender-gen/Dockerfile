@@ -1,7 +1,7 @@
 FROM nytimes/blender:3.3.1-gpu-ubuntu18.04 AS blender
 # install git and pull the blender generation script
 RUN apt-get update && apt-get install -y git python3
-RUN echo 7
+RUN echo 13
 # RUN git clone -b test https://github.com/CV-Bench/blender-gen.git /workspace/blender_gen
 RUN git clone https://github.com/CV-Bench/blender-gen.git /workspace/blender_gen
 

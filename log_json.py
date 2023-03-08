@@ -15,20 +15,20 @@ def get_stats(path->str)->tuple:
     # last line is empty
     lines = open(path, 'r').read().split('\n')[1:-1]
     logs = [json.loads(line) for line in lines]
-    val_mAP = [log['bbox_mAP'] for log in logs if log['mode'] == 'val']
+    val_metric_object = [log['bbox_mAP'] for log in logs if log['mode'] == 'val']
     
 
-    if len(val_mAP) == 0:
+    if len(val_metric_object) == 0:
        first, last, current =  0, 0, 0
     
-    elif len(val_mAP) == 1:
-        first, last, current = val_mAP[0], val_mAP[0], val_mAP[0]    
+    elif len(val_metric_object) == 1:
+        first, last, current = val_metric_object[0], val_metric_object[0], val_metric_object[0]    
         
-    elif len(val_mAP) == 2:
-        return val_mAP[0], val_mAP[0], val_mAP[1]
+    elif len(val_metric_object) == 2:
+        return val_metric_object[0], val_metric_object[0], val_metric_object[1]
     
     else:
-        first, last, current = val_mAP[0], val_mAP[-2], val_mAP[-1]
+        first, last, current = val_metric_object[0], val_metric_object[-2], val_metric_object[-1]
     
     return first, last, current
 
