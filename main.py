@@ -25,4 +25,8 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    # asyncio.run(main())
+
+    task = TaskNamespace("/task")
+
+    asyncio.run(task.on_start({ "taskId": "640782522a87cc2d65f912d8"}))

@@ -102,20 +102,22 @@ def start_dataset_creation(id, task_data):
         task_data["modelIds"]
     )
 
-    # Start the Task
+
+    Utils.make_dir(backgrounds_base_path)
 
     Utils.Docker.stop_and_remove(id)
 
     startup_command = (
-        f"docker run -d --memory 16g --network=host "
+        f"docker run -d --memory 16g --network=host --rm "
         # Volumes
         f"-v {pwd}/data/tasks/{id}:/data/input "
         f"-v {pwd}/data/datasets/{id}:/data/output "
+        f"-v {pwd}/data/tasks/{id}/log:/data/log "
         f"-v {pwd}/data/tasks/{id}/config.json:/data/input/config/config.json "
         # Name
         f"--name {id} {Docker.BLENDER_GEN} "
         # Arguments
-        f"--taskID {id} --endpoint {config['HOST_DOMAIN']}"
+        f"--taskID {id} --endpoint {config['HOST_DOMAIN']} --output file"
     )
 
     Utils.Docker.start(startup_command)
