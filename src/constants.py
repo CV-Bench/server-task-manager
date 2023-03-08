@@ -47,6 +47,8 @@ class Socket:
     TASK_STARTED = "task_started"
     START_FAILED = "start_failed"
 
+    LOG_UPDATE = "log_update"
+
 
 allowed_training_architecture_keys = [
     "retinanet_r50_fpn",
@@ -57,3 +59,7 @@ allowed_training_architecture_keys = [
 class Docker:
     OPENMM = "openmm"
     BLENDER_GEN = "blender-gen"
+
+
+class Logs:
+    DATASET_MAX_LINES = 100

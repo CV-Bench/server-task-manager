@@ -14,3 +14,5 @@ data/models/*
 
 /**/__pycache__
 testing
+
+poetry.lock
