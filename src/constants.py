@@ -63,3 +63,4 @@ class Docker:
 
 class Logs:
     DATASET_MAX_LINES = 100
+    TRAINING_MAX_LINES = 50

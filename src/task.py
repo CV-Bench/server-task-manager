@@ -36,10 +36,11 @@ def start_training(id, task_data):
         return False
 
     startup_command = (
-        f"docker run -it --gpus all --memory 16g --network=host "
+        f"docker run -it --gpus all --memory 16g --network=host --rm"
         # Volumes
-        f"-v {pwd}/data/dataset/{dataset_id}:/data/input "
-        f"-v {pwd}/data/network/{id}:/data/output "
+        f"-v {pwd}/data/datasets/{dataset_id}:/data/input "
+        f"-v {pwd}/data/networks/{id}:/data/output "
+        f"-v {pwd}/data/tasks/{id}:/data/log "
         # Env variables
         f"-e ENDPOINT={config['HOST_DOMAIN']} "
         f"-e ID={id} "

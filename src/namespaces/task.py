@@ -43,7 +43,7 @@ class TaskNamespace(socketio.AsyncClientNamespace):
 
         is_success = start_task(task_id, task_type, task_data)
 
-        # await self.on_subscribe_task_log({ "taskId": task_id, "taskType": task_type})
+        await self.on_subscribe_task_log({ "taskId": task_id, "taskType": task_type})
 
         await self.emit(
             Socket.TASK_STARTED if is_success else Socket.START_FAILED, 
@@ -88,12 +88,14 @@ class TaskNamespace(socketio.AsyncClientNamespace):
     async def handle_send_log_update(self):
         while True:
             if not self.task_queue.empty():
-                data = self.task_queue.get_nowait()
+                while not self.task_queue.empty():
 
-                if data:
-                    await self.emit(Socket.LOG_UPDATE, data)
+                    data = self.task_queue.get_nowait()
 
-            await asyncio.sleep(5)
+                    if data:
+                        await self.emit(Socket.LOG_UPDATE, data)
+
+            await asyncio.sleep(2)
 
     def add_task(self, handler):
         task = asyncio.create_task(handler())
@@ -123,6 +125,8 @@ class TaskNamespace(socketio.AsyncClientNamespace):
         if not handler:
             return
         
+        logger.debug(f"Subscribe task log: {task_id}")
+        
         watch_path = get_watcher_path(os.getcwd(), task_id, task_type)
 
         Utils.make_dir(watch_path)
@@ -138,6 +142,8 @@ class TaskNamespace(socketio.AsyncClientNamespace):
 
         if not self.observers.get(task_id):
             return
+        
+        logger.debug(f"Unaubscribe task log: {task_id}")
 
         self.observers[task_id].stop()
         self.observers.pop(task_id)
