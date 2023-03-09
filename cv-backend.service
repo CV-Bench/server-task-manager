@@ -1,0 +1,7 @@
+[Unit]
+Description=CV-Backend Service
+
+[Service]
+WorkingDirectory=<WorkDir>
+ExecStart=<PythonDir> main.py
+Restart=always
