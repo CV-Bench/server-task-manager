@@ -15,7 +15,7 @@ class Database:
     ## NETWORK ARCHITECTURE
 
     def get_network_architecture(networkArchitectureId):
-        return db.networkArchitectures.find_one({
+        return db.networkArchitecture.find_one({
             "_id": ObjectId(networkArchitectureId)
         })
 
