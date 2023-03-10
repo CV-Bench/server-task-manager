@@ -28,7 +28,7 @@ def start_training(id, task_data):
         return False
     
     pwd = os.getcwd()
-    dataset_path = os.path.join(pwd, "data", "dataset", dataset_id)
+    dataset_path = os.path.join(pwd, "data", "datasets", dataset_id)
 
     if not os.path.exists(dataset_path):
         logger.error(f"[START TASK] Dataset with ID {dataset_id} doesn't exist.")
@@ -36,10 +36,11 @@ def start_training(id, task_data):
         return False
 
     startup_command = (
-        f"docker run -it --gpus all --memory 16g --network=host "
+        f"docker run -d --gpus all --memory 16g --network=host --rm "
         # Volumes
-        f"-v {pwd}/data/dataset/{dataset_id}:/data/input "
-        f"-v {pwd}/data/network/{id}:/data/output "
+        f"-v {pwd}/data/datasets/{dataset_id}:/data/input "
+        f"-v {pwd}/data/networks/{id}:/data/output "
+        f"-v {pwd}/data/tasks/{id}:/data/log "
         # Env variables
         f"-e ENDPOINT={config['HOST_DOMAIN']} "
         f"-e ID={id} "

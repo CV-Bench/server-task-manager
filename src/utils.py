@@ -269,6 +269,16 @@ class Utils:
                     }
 
                 return new_states
+            
+            def state_array_to_single_state(state):
+                keys = state[0].keys()
+
+                new_state = {}
+
+                for key in keys:
+                    new_state[key] = [state[0][key], state[1][key], state[2][key]]
+
+                return new_state
 
             def get_train_stats(path):
                 """prints the first, last and current mAP of a log file
@@ -310,8 +320,11 @@ class Utils:
 
                         current_epoch = content["epoch"]
 
+                    train_steps = Utils.Logs.Training.extract_infos_from_train_states(train_steps)
+                    val_steps = Utils.Logs.Training.extract_infos_from_val_states(val_steps)
+
                     return {
-                        "train": Utils.Logs.Training.extract_infos_from_train_states(train_steps), 
-                        "val": Utils.Logs.Training.extract_infos_from_val_states(val_steps),
-                        "current_epoch": current_epoch
+                        "train": Utils.Logs.Training.state_array_to_single_state(train_steps), 
+                        "val": Utils.Logs.Training.state_array_to_single_state(val_steps),
+                        "currentEpoch": current_epoch
                     }

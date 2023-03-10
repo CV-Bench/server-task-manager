@@ -13,7 +13,7 @@ async def main():
     sio.register_namespace(DataNamespace("/data"))
 
     await sio.connect(
-        "http://localhost:3002", 
+        config["SOCKET_DOMAIN"], 
         headers={
             "serverid": config["SERVER_ID"]
         },
