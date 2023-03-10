@@ -36,7 +36,7 @@ def start_training(id, task_data):
         return False
 
     startup_command = (
-        f"docker run -it --gpus all --memory 16g --network=host --rm"
+        f"docker run -it --gpus all --memory 16g --network=host --rm "
         # Volumes
         f"-v {pwd}/data/datasets/{dataset_id}:/data/input "
         f"-v {pwd}/data/networks/{id}:/data/output "
