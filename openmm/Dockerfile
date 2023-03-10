@@ -49,4 +49,4 @@ RUN pip install --no-cache-dir -e .
 # COPY ./configs configs/_user_
 
 ENTRYPOINT ["python", "tools/train.py"]
-#CMD ["configs/_user_/faster-rccn.py"]
+CMD ["configs/_user_/faster-rccn.py"]
