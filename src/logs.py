@@ -102,5 +102,5 @@ task_log_watcher = {
 
 get_watcher_path = lambda pwd, task_id, e: {
     TaskType.CREATE_DATASET: os.path.join(pwd, "data", "tasks", task_id, "log"),
-    TaskType.CREATE_NETWORK: os.path.join(pwd, "data", "tasks", task_id, "log")
+    TaskType.CREATE_NETWORK: os.path.join(pwd, "data", "tasks", task_id)
 }[e]
