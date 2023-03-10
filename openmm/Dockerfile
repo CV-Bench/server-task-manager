@@ -31,9 +31,9 @@ RUN wget -O /checkpoints/faster_rcnn_r50_fpn.pth https://download.openmmlab.com/
 RUN wget -O /checkpoints/retinanet_r50_fpn.pth https://download.openmmlab.com/mmdetection/v2.0/retinanet/retinanet_r50_fpn_2x_coco/retinanet_r50_fpn_2x_coco_20200131-fdb43119.pth
 RUN wget -O /checkpoints/yolo_v3.pth https://download.openmmlab.com/mmdetection/v2.0/yolo/yolov3_d53_mstrain-608_273e_coco/yolov3_d53_mstrain-608_273e_coco_20210518_115020-a2c3acb8.pth
 RUN wget -O /checkpoints/yolo_x.pth https://download.openmmlab.com/mmdetection/v2.0/yolox/yolox_s_8x8_300e_coco/yolox_s_8x8_300e_coco_20211121_095711-4592a793.pth
-RUN wget -O /checkpoints/yolo_x.pth https://download.openmmlab.com/mmdetection/v2.0/yolox/yolox_s_8x8_300e_coco/yolox_s_8x8_300e_coco_20211121_095711-4592a793.pth
 RUN wget -O /checkpoints/tood_r50_fpn.pth https://download.openmmlab.com/mmdetection/v2.0/tood/tood_r50_fpn_mstrain_2x_coco/tood_r50_fpn_mstrain_2x_coco_20211210_144231-3b23174c.pth
 RUN wget -O /checkpoints/detr_r50.pth https://download.openmmlab.com/mmdetection/v2.0/detr/detr_r50_8x2_150e_coco/detr_r50_8x2_150e_coco_20201130_194835-2c4b8974.pth
+RUN wget -O /checkpoints/mask_rcnn_r50_fpn.pth https://download.openmmlab.com/mmdetection/v2.0/mask_rcnn/mask_rcnn_r50_fpn_2x_coco/mask_rcnn_r50_fpn_2x_coco_bbox_mAP-0.392__segm_mAP-0.354_20200505_003907-3e542a40.pth
 
 RUN apt update && apt install -y nano
 

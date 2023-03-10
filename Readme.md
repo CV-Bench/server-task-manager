@@ -9,11 +9,10 @@ An examplatory call is given by:
 docker run -it --gpus all \
 -v ${pwd}/users/19938882/blender:/data/input \
 -v ${pwd}/users/19938882/dataset:/data/output \
-blender
+blender --coco-images-root images
 ```
 
 ## How to start the Training:
-* Generate two datasets using the blender container `train` and `val` 
 * Fix the image paths from the blender container
 
 Build container: `docker build -t mmdetection openmm`
